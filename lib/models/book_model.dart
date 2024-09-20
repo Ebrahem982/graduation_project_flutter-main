@@ -7,14 +7,16 @@ class BookModel {
   String? status;
   String? availability;
   String? approvalStatus;
-  num? price;
+  int? price;
   String? image;
   int? userId;
+  String? featured;
   String? createdAt;
   String? updatedAt;
   num? reviewsAvgRating;
   User? user;
   Category? category;
+  Subscription? subscription;
 
   BookModel(
       {this.id,
@@ -28,11 +30,13 @@ class BookModel {
       this.price,
       this.image,
       this.userId,
+      this.featured,
       this.createdAt,
       this.updatedAt,
       this.reviewsAvgRating,
       this.user,
-      this.category});
+      this.category,
+      this.subscription});
 
   BookModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -46,12 +50,16 @@ class BookModel {
     price = json['price'];
     image = json['image'];
     userId = json['user_id'];
+    featured = json['featured'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     reviewsAvgRating = json['reviews_avg_rating'];
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;
+    subscription = json['subscription'] != null
+        ? Subscription.fromJson(json['subscription'])
+        : null;
   }
 }
 
@@ -114,6 +122,41 @@ class Category {
     name = json['name'];
     icon = json['icon'];
     color = json['color'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+}
+
+class Subscription {
+  int? id;
+  int? userId;
+  int? bookId;
+  int? price;
+  String? startDate;
+  String? endDate;
+  String? status;
+  String? createdAt;
+  String? updatedAt;
+
+  Subscription(
+      {this.id,
+      this.userId,
+      this.bookId,
+      this.price,
+      this.startDate,
+      this.endDate,
+      this.status,
+      this.createdAt,
+      this.updatedAt});
+
+  Subscription.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    bookId = json['book_id'];
+    price = json['price'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
+    status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }

@@ -66,7 +66,7 @@ class _UsersBookWidgetState extends State<UsersBookWidget> {
                     child: CachedNetworkImage(
                       imageUrl: widget.books[index].image!,
                       // height: 180,
-                      width: MediaQuery.of(context).size.width * 0.29,
+                      width: MediaQuery.of(context).size.width * 0.32,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -74,7 +74,7 @@ class _UsersBookWidgetState extends State<UsersBookWidget> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.all(10),
-                    height: 140,
+                    height: 160,
                     decoration: BoxDecoration(
                       color: const Color(0xFFE79696),
                       // border: Border.all(color: Colors.red),
@@ -111,90 +111,163 @@ class _UsersBookWidgetState extends State<UsersBookWidget> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Text(widget.books[index].author!),
+                        Builder(
+                          builder: (context) {
+                            if (widget.books[index].availability == 'sale') {
+                              return Text('${widget.books[index].price!}EGP');
+                            } else {
+                              return Image.asset(
+                                'assets/images/swap-icon.png',
+                                width: 30,
+                              );
+                            }
+                          },
+                        ),
                         const SizedBox(height: 10),
-                        Text(widget.books[index].availability == 'sale'
-                            ? '${widget.books[index].price!}EGP'
-                            : '🤝'),
+                        Text(widget.books[index].category!.name!),
                         const SizedBox(height: 10),
                         Builder(
                           builder: (context) {
-                            if (widget.books[index].availability != 'sold') {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      bool isMarkedAsSold =
-                                          await BooksServiceApi().markAsSold(
-                                        bookId: widget.books[index].id!,
-                                        token:
-                                            BlocProvider.of<AuthCubit>(context)
-                                                .userData!
-                                                .token!,
-                                      );
-                                      if (isMarkedAsSold) {
-                                        widget.books[index].availability =
-                                            'sold';
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content:
-                                                Text('Book marked as sold'),
-                                            backgroundColor: Colors.green,
-                                          ),
+                            if (widget.books[index].approvalStatus ==
+                                'approved') {
+                              if (widget.books[index].availability != 'sold') {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        bool isMarkedAsSold =
+                                            await BooksServiceApi().markAsSold(
+                                          bookId: widget.books[index].id!,
+                                          token: BlocProvider.of<AuthCubit>(
+                                                  context)
+                                              .userData!
+                                              .token!,
                                         );
-                                        setState(() {});
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content:
-                                                Text('Failed to mark as sold'),
+                                        if (isMarkedAsSold) {
+                                          widget.books[index].availability =
+                                              'sold';
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content:
+                                                  Text('Book marked as sold'),
+                                              backgroundColor: Colors.green,
+                                            ),
+                                          );
+                                          setState(() {});
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Failed to mark as sold'),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        padding: const EdgeInsets.all(5),
+                                        child: const Text(
+                                          'Mark as Sold',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
                                           ),
-                                        );
-                                      }
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      padding: const EdgeInsets.all(5),
-                                      child: const Text(
-                                        'Mark as Sold',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).pushNamed(
-                                          '/choose-plan',
-                                          arguments: {
-                                            'bookId': widget.books[index].id,
-                                          });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      padding: const EdgeInsets.all(5),
-                                      child: const Text(
-                                        'Sell Faster Now',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        ),
-                                      ),
+                                    const SizedBox(width: 5),
+                                    Builder(
+                                      builder: (context) {
+                                        if (widget.books[index].subscription ==
+                                                null ||
+                                            widget.books[index].subscription!
+                                                    .status !=
+                                                'active') {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pushNamed(
+                                                  '/choose-plan',
+                                                  arguments: {
+                                                    'bookId':
+                                                        widget.books[index].id,
+                                                  });
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              padding: const EdgeInsets.all(5),
+                                              child: const Text(
+                                                'Sell Faster',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else if (widget.books[index]
+                                                .subscription!.status ==
+                                            'active') {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            padding: const EdgeInsets.all(5),
+                                            child: Text(
+                                              'Featured till \n ${widget.books[index].subscription!.endDate}',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return const SizedBox();
+                                        }
+                                      },
                                     ),
+                                  ],
+                                );
+                              } else {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                ],
+                                  padding: const EdgeInsets.all(5),
+                                  child: const Text(
+                                    'Sold',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                );
+                              }
+                            } else if (widget.books[index].approvalStatus ==
+                                'pending') {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                padding: const EdgeInsets.all(5),
+                                child: const Text(
+                                  'Pending Approval',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
                               );
                             } else {
                               return Container(
@@ -204,8 +277,11 @@ class _UsersBookWidgetState extends State<UsersBookWidget> {
                                 ),
                                 padding: const EdgeInsets.all(5),
                                 child: const Text(
-                                  'Sold',
-                                  style: TextStyle(color: Colors.white),
+                                  'book is not approved',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               );
                             }

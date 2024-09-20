@@ -1,13 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project/models/book_model.dart';
+import 'package:graduation_project/screens/books_screen.dart';
 import 'package:graduation_project/services/apis/bookmark_service.dart';
 import 'package:graduation_project/services/cubits/auth/auth_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SingleBookWidget extends StatelessWidget {
-  const SingleBookWidget({
+class SignleBookWidget extends StatelessWidget {
+  const SignleBookWidget({
     super.key,
     required this.books,
   });
@@ -28,21 +31,18 @@ class SingleBookWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () async {
-                  final authCubit = BlocProvider.of<AuthCubit>(context);
-                  final userId = authCubit.userData?.data?.id;
-
-                  if (userId != null) {
-                    final book = books[index];
-                    final routeName = book.userId == userId
-                        ? '/edit-book'
-                        : '/book-details';
-                    await Navigator.of(context).pushNamed(
-                      routeName,
-                      arguments: book,
-                    );
-                  }
-                },
+                onTap: books[index].userId ==
+                        BlocProvider.of<AuthCubit>(context).userData!.data!.id
+                    ? () {
+                        Navigator.of(context).pushNamed(
+                          '/edit-book',
+                          arguments: books[index],
+                        );
+                      }
+                    : () {
+                        Navigator.of(context).pushNamed('/book-details',
+                            arguments: books[index]);
+                      },
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -54,6 +54,7 @@ class SingleBookWidget extends StatelessWidget {
                       ),
                     ),
                     Container(
+                      // alignment: Alignment.center,
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -63,27 +64,26 @@ class SingleBookWidget extends StatelessWidget {
                         ),
                       ]),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(
-                          imageUrl: books[index].image!,
-                          height: 140,
-                          width: 100,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Shimmer.fromColors(
-                            baseColor: Theme.of(context).colorScheme.surface,
-                            highlightColor: Theme.of(context)
-                                .colorScheme
-                                .surfaceVariant,
-                            child: Container(
-                              height: 140,
-                              width: 100,
-                              color: Colors.grey,
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: books[index].image!,
+                            height: 140,
+                            width: 100,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Theme.of(context).colorScheme.surface,
+                              highlightColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
+                              child: Container(
+                                height: 140,
+                                width: 100,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          )),
                     ),
                   ],
                 ),
@@ -141,23 +141,29 @@ class SingleBookWidget extends StatelessWidget {
                                 .id
                         ? GestureDetector(
                             onTap: () async {
-                              final userId = BlocProvider.of<AuthCubit>(context)
-                                  .userData!
-                                  .data!
-                                  .id;
-                              bool success = await BookmarkService()
-                                  .addBookmark(
-                                      bookId: books[index].id!,
-                                      userId: userId!);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(success
-                                      ? 'Bookmarked successfully'
-                                      : 'Already in your bookmarks'),
-                                  backgroundColor:
-                                      success ? Colors.green : Colors.red,
-                                ),
+                              bool success =
+                                  await BookmarkService().addBookmark(
+                                bookId: books[index].id!,
+                                userId: BlocProvider.of<AuthCubit>(context)
+                                    .userData!
+                                    .data!
+                                    .id!,
                               );
+                              if (success) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Bookmarked successfully'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Already in your bookmarks'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                             child: const Icon(
                               Icons.bookmark,
@@ -166,10 +172,10 @@ class SingleBookWidget extends StatelessWidget {
                           )
                         : GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushNamed('/choose-plan',
-                                  arguments: {
-                                    'bookId': books[index].id,
-                                  });
+                              Navigator.of(context)
+                                  .pushNamed('/choose-plan', arguments: {
+                                'bookId': books[index].id,
+                              });
                             },
                             child: const Icon(
                               Icons.arrow_circle_up,
@@ -184,29 +190,6 @@ class SingleBookWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class BookChips extends StatelessWidget {
-  const BookChips({
-    super.key,
-    required this.text,
-    required this.color,
-  });
-
-  final Widget text;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: text,
     );
   }
 }

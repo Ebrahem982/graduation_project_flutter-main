@@ -42,29 +42,53 @@ class BookWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Hero(
-                  tag: book.id!,
-                  child: CachedNetworkImage(
-                    imageUrl: book.image!,
-                    height: isSwapBook ? 240 : 140,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Shimmer.fromColors(
-                      baseColor: Theme.of(context).colorScheme.surface,
-                      highlightColor:
-                          Theme.of(context).colorScheme.surfaceVariant,
-                      child: Container(
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Hero(
+                      tag: book.id!,
+                      child: CachedNetworkImage(
+                        imageUrl: book.image!,
                         height: isSwapBook ? 240 : 140,
                         width: double.infinity,
-                        color: Colors.grey,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Theme.of(context).colorScheme.surface,
+                          highlightColor: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest,
+                          child: Container(
+                            height: isSwapBook ? 240 : 140,
+                            width: double.infinity,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
-                ),
+                  if (book.subscription != null &&
+                      DateTime.parse(book.subscription!.endDate!)
+                          .isAfter(DateTime.now()) &&
+                      book.subscription?.status == 'active')
+                    Positioned(
+                      left: 5,
+                      top: 5,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: const Text('Featured'),
+                      ),
+                    ),
+                ],
               ),
             ),
             const SizedBox(height: 5),
@@ -82,40 +106,40 @@ class BookWidget extends StatelessWidget {
                 ),
               ),
             ),
-            // author
+            // Author
             Text(
               book.author!,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+              ),
             ),
+            // Rating and Price/Swap Icon
             Row(
               children: [
                 Text(
                   '⭐ ${book.reviewsAvgRating != null ? book.reviewsAvgRating!.toStringAsFixed(2) : '0'}',
-                  style: const TextStyle(fontSize: 12, color: Colors.amber),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.amber,
+                  ),
                 ),
                 const SizedBox(width: 5),
-                // Text(
-                //   book.availability == 'sale' ? '${book.price}EGP' : '| ',
-                //   style: const TextStyle(fontSize: 12, color: Colors.grey),
-                // ),
-                Builder(
-                  builder: (context) {
-                    if (book.availability == 'sale') {
-                      return Text(
-                        '${book.price} EGP',
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
-                      );
-                    } else {
-                      return Image.asset(
-                        'assets/images/swap-icon.png',
-                        width: 35,
-                      );
-                    }
-                  },
-                ),
+                if (book.availability == 'sale')
+                  Text(
+                    '${book.price} EGP',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  )
+                else
+                  Image.asset(
+                    'assets/images/swap-icon.png',
+                    width: 35,
+                  ),
               ],
-            )
+            ),
           ],
         ),
       ),

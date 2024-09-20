@@ -15,7 +15,9 @@ class StartScreen extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/icon4.png"), fit: BoxFit.fill),
+            image: AssetImage("assets/images/icon4.png"),
+            fit: BoxFit.fill,
+          ),
         ),
         width: double.infinity,
         height: double.infinity,
@@ -40,46 +42,46 @@ class StartScreen extends StatelessWidget {
                     fontFamily: "myfont1",
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 const Padding(
-                    padding: EdgeInsets.only(
-                  left: 45,
-                  right: 45,
-                )),
-                const Text(
-                  "Find your dream book according to your preferemce and join to our family.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
+                  padding: EdgeInsets.symmetric(horizontal: 45),
+                  child: Text(
+                    "Find your dream book according to your preference and join our family.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      fontFamily: "myfont2"),
+                      fontFamily: "myfont2",
+                    ),
+                  ),
                 ),
-                const SizedBox(
-                  height: 35,
-                ),
+                const SizedBox(height: 35),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/get-started");
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                        const Color.fromARGB(255, 207, 147, 146)),
+                      const Color.fromARGB(255, 207, 147, 146),
+                    ),
                     padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 8)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(11))),
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(11),
+                      ),
+                    ),
                   ),
                   child: const Text(
                     "Get Started",
                     style: TextStyle(
-                        fontSize: 22,
-                        fontFamily: "myfont3",
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white),
+                      fontSize: 22,
+                      fontFamily: "myfont3",
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

@@ -17,6 +17,7 @@ class BookMarksScreen extends StatefulWidget {
 }
 
 class _BookMarksScreenState extends State<BookMarksScreen> {
+  // ignore: prefer_typing_uninitialized_variables
   var future;
 
   getBookmarks() async {

@@ -90,7 +90,7 @@ class BooksSimmer extends StatelessWidget {
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: Theme.of(context).colorScheme.surface,
-          highlightColor: Theme.of(context).colorScheme.surfaceVariant,
+          highlightColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: BookWidget(
             isSwapBook: isSwapBook,
             book: BookModel(

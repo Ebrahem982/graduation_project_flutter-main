@@ -4,7 +4,6 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:graduation_project/models/book_model.dart';
@@ -52,6 +51,14 @@ class BookDetailsScreen extends StatelessWidget {
           children: [
             BookDetailsWidget(arguments: arguments),
             const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                'Book Overview',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 10),
             //* Book Description
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -159,7 +166,10 @@ class BookDetailsScreen extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            const Text('Reviews', style: TextStyle(fontSize: 20)),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text('Reviews', style: TextStyle(fontSize: 20)),
+            ),
             const SizedBox(height: 20),
             //* Reviews
             FutureBuilder<List<ReviewModel>>(
@@ -381,7 +391,12 @@ class ReviewWidget extends StatelessWidget {
                     const Icon(Icons.star, color: Colors.amber),
                 itemSize: 20),
             const SizedBox(width: 20),
-            Text('Date: ${review.createdAt}'),
+            Text(
+              '${review.createdAt}',
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 10),
@@ -488,8 +503,8 @@ class BookDetailsWidget extends StatelessWidget {
                         title: 'Rating',
                       ),
                       BookDetailsInfo(
-                        value: 'Address',
-                        title: arguments.user!.location!,
+                        value: arguments.user!.location!,
+                        title: 'Address',
                       ),
                       BookDetailsInfo(
                         value: arguments.category!.name!,

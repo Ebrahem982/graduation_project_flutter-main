@@ -255,15 +255,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 5,
                 ),
                 DropdownButtonFormField(
-                  decoration: const InputDecoration(
+                  validator: (value) =>
+                      value == null ? 'Please select your governorate' : null,
+                  decoration: InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(
                       borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.horizontal(
-                        right: Radius.circular(7),
-                        left: Radius.circular(7),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     hintText: 'Select your governorate',
                   ),
@@ -403,15 +402,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(
-                        left: 35,
-                      ),
-                      child: const Text(
-                        "Already have an account ?",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
+                    const Text(
+                      "Already have an account ?",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                     ),
                     Container(
                       padding: const EdgeInsets.only(),

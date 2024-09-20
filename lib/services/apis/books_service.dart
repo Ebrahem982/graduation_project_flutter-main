@@ -232,4 +232,37 @@ class BooksServiceApi {
       return false;
     }
   }
+
+  Future<bool> makeSubscription(
+      {required num bookId,
+      required num price,
+      required DateTime startDate,
+      required DateTime endDate,
+      required num userId}) async {
+    try {
+      final response = await dio.post(
+        '$baseUrl/books/subscribe',
+        options: Options(responseType: ResponseType.json, headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          // 'Authorization': 'Bearer $token'
+        }),
+        data: {
+          'book_id': bookId,
+          'price': price,
+          'start_date': startDate.toIso8601String(),
+          'end_date': endDate.toIso8601String(),
+          'user_id': userId
+        },
+      );
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } on DioException catch (e) {
+      log(e.response!.data['message'].toString());
+      return false;
+    }
+  }
 }

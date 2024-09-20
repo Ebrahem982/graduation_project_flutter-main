@@ -13,15 +13,25 @@ class GetStartedScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/icon5.png"),
-                fit: BoxFit.fill)),
+          image: DecorationImage(
+            image: AssetImage("assets/images/icon5.png"),
+            fit: BoxFit.fill,
+          ),
+        ),
         width: double.infinity,
         height: double.infinity,
         child: Stack(
           children: [
-            Positioned(child: Image.asset("assets/images/Rectangle 41.png")),
-            Positioned(child: Image.asset("assets/images/Rectangle 42.png")),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Image.asset("assets/images/Rectangle 41.png"),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Image.asset("assets/images/Rectangle 42.png"),
+            ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -35,6 +45,7 @@ class GetStartedScreen extends StatelessWidget {
                       width: 320,
                     ),
                   ),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, "/register");
@@ -53,9 +64,7 @@ class GetStartedScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, "/login");
@@ -74,9 +83,7 @@ class GetStartedScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
